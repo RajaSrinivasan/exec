@@ -32,7 +32,7 @@ compile:
   stage: build
   script:
     - mkdir bin/
-    - go build -race -ldflags "-extldflags '-static'" ./... -o $CI_PROJECT_DIR/bin/
+    - go build -race -ldflags "-extldflags '-static'"  -o $CI_PROJECT_DIR/bin/ ./...
   artifacts:
     paths:
       - bin/exec
