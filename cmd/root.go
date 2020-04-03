@@ -15,10 +15,10 @@ var verbose bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "template",
-	Short: "Command Line utilities template",
+	Use:   "exec",
+	Short: "Execute specified command",
 	Long: `
-	This is a template project for command line utilities
+	Execute specified command according to the requested schedule
 	`,
 	Version: "v0.0.0",
 }
