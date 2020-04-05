@@ -21,6 +21,6 @@ func init() {
 }
 
 func Run(cmd *cobra.Command, args []string) {
-	fmt.Printf("Invoking runner with args %v", args)
+	fmt.Printf("Invoking runner with args %v\n", args)
 	runner.Run(args)
 }
