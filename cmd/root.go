@@ -34,6 +34,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cli/cli.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "be verbose")
+
 }
 
 func initConfig() {
