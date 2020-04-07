@@ -52,7 +52,18 @@ func Run(cmd *cobra.Command, args []string) {
 			log.Printf("%s", err)
 			os.Exit(1)
 		}
-		runner.RunToDuration(timerspec, repeat, args)
+		ch := make(chan string)
+
+		if repeat {
+			go runner.RunToDuration(timerspec, repeat, args, ch)
+			for {
+				log.Printf("Asking for status updates")
+				ch <- "status"
+				time.Sleep(5 * timerspec)
+			}
+		} else {
+			runner.RunToDuration(timerspec, repeat, args, ch)
+		}
 	}
 
 	runner.Run(args)
