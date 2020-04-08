@@ -34,6 +34,8 @@ func init() {
 
 func Run(cmd *cobra.Command, args []string) {
 	log.Printf("Invoking runner with args %v\n", args)
+	ch := make(chan string)
+
 	if len(clock) > 0 {
 		clockspec, err := time.Parse("15:04:05", clock)
 		if err != nil {
@@ -43,7 +45,17 @@ func Run(cmd *cobra.Command, args []string) {
 		if len(timer) > 0 {
 			log.Printf("Timer spec ignored. Clock overrides the timer")
 		}
-		runner.RunToClock(clockspec, repeat, args)
+
+		if repeat {
+			go runner.RunToClock(clockspec, repeat, args, ch)
+			for {
+				time.Sleep(5 * time.Minute)
+				log.Printf("Asking for status updates")
+				ch <- "status"
+			}
+		} else {
+			runner.RunToClock(clockspec, repeat, args, ch)
+		}
 	}
 
 	if len(timer) > 0 {
@@ -52,7 +64,6 @@ func Run(cmd *cobra.Command, args []string) {
 			log.Printf("%s", err)
 			os.Exit(1)
 		}
-		ch := make(chan string)
 
 		if repeat {
 			go runner.RunToDuration(timerspec, repeat, args, ch)
@@ -65,6 +76,5 @@ func Run(cmd *cobra.Command, args []string) {
 			runner.RunToDuration(timerspec, repeat, args, ch)
 		}
 	}
-
 	runner.Run(args)
 }
