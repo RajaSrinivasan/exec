@@ -1,27 +1,11 @@
 package runner
 
 import (
-	"log"
-	"os"
 	"os/exec"
-	"path"
 	"time"
 )
 
-var markerLine = "-----------------------------------------------------------------------------"
-
-func logSetup(nm string, fullcmd string) (logger *log.Logger, lf *os.File) {
-	bn := path.Base(nm)
-	logfilename := bn + ".log"
-	lf, _ = os.Create(logfilename)
-	logger = log.New(lf, "", 0)
-	logger.Println(markerLine)
-	logger.Printf("Command : %s", fullcmd)
-	logger.Printf("Started: %s", time.Now().Format(time.ANSIC))
-	logger.Println(markerLine)
-
-	return logger, lf
-}
+var buildNo int
 
 func Run(args []string) {
 
@@ -29,7 +13,7 @@ func Run(args []string) {
 
 	cmd := exec.Command(args[0], args[1:]...)
 
-	logger, lf := logSetup(args[0], cmd.String())
+	logger, lf := Create(args[0], cmd.String(), buildNo)
 	defer lf.Close()
 
 	var finalstat error

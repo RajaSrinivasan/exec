@@ -8,6 +8,8 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"gitlab.com/RajaSrinivasan/exec/impl/runner"
 )
 
 var cfgFile string
@@ -38,20 +40,24 @@ func init() {
 }
 
 func initConfig() {
+
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		home = "./"
+	}
+
+	logsDir := path.Join(home, "logs")
+	viper.SetDefault("LogsDir", logsDir)
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		defconfigpath := path.Join(home, ".cli")
+		defconfigpath := path.Join(home, ".exec")
 		viper.AddConfigPath(defconfigpath)
 		viper.AddConfigPath("./etc")
-		viper.SetConfigName("cli")
+		viper.SetConfigName("exec")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -60,4 +66,6 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
+	runner.LogsDir = viper.GetString("LogsDir")
 }
