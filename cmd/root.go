@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
 	Long: `
 	Execute specified command according to the requested schedule
 	`,
-	Version: "v0.0.0",
+	Version: "v0.1.0",
 }
 
 func Execute() {
